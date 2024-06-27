@@ -25,6 +25,24 @@ class MovieSerializer(serializers.ModelSerializer):
         """
         return super().update(instance, validated_data)
 
+    def validate(self, data):
+        """
+        This function will apply validation to the entire object.
+        """
+        if data['name'] == data['description']:
+            raise serializers.ValidationError(
+                "Title and Description are the same, should be different!")
+        return data
+
+    def validate_name(self, value):
+        """
+        Picks the field by the name of the validation funcion, in this case the field is name.
+        validate_(field_name)
+        """
+        if len(value) < 2:
+            raise serializers.ValidationError("Name is too short!")
+        return value
+
 
 """
         instance.name = validated_data.get('name', instance.name)
