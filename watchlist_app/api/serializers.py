@@ -33,7 +33,7 @@ class WatchListSerializer(serializers.ModelSerializer):
         """
         This function will apply validation to the entire object.
         """
-        if data['name'] == data['description']:
+        if data['title'] == data['storyline']:
             raise serializers.ValidationError(
                 "Title and Description are the same, should be different!")
         return data
@@ -52,11 +52,16 @@ class WatchListSerializer(serializers.ModelSerializer):
         This is a read-only field. It gets its value by calling a method on the serializer class it is attached to.
         It can be used to add any sort of data to the serialized representation of your object.
         """
-        length = len(object.name)
+        length = len(object.title)
         return length
 
 
 class StreamPlataformSerializer(serializers.ModelSerializer):
+    watchlist = WatchListSerializer(many=True, read_only=True)
+    # watchlist = serializers.StringRelatedField(many=True) Mostra o que retorna na função __str__
+    # watchlist = serializers.PrimaryKeyRelatedField(many=True, read_only=True)  Mostra só a chave primária
+    # watchlist = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='movie-detail')
+
     class Meta:
         model = StreamPlataform
         fields = "__all__"
